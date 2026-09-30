@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController {
 
     @GetMapping("/{requestedId}") 
-    private ResponseEntity<Post> findById() {
-         Post post = new Post(
-            1L, 
+    private ResponseEntity<Post> findById(@PathVariable Long requestedId) {
+        if (!requestedId.equals(1L)) return ResponseEntity.notFound().build();
+        
+        Post post = new Post(
+            requestedId, 
             "Test Post", 
             "This is the Test Post Content", 
             "This is the Post Category",

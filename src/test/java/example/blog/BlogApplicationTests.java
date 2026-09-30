@@ -25,13 +25,18 @@ class BlogApplicationTests {
 
 	@BeforeEach 
 	void setUp() {
-		this.restClient = RestClient.create("http://localhost:" + port);
+		this.restClient = RestClient.builder()
+		.baseUrl("http://localhost:" + port)
+		.defaultStatusHandler(status -> status.isError(), (request, response) -> {
+			// Ignore exceptions to assert any HTTP status code in tests.  
+        })
+		.build();
 	}
 
 	@Test
 	void shouldReturnAPostWhenDataIsSaved() {
 		ResponseEntity<String> response = this.restClient.get()
-			.uri("/posts/99")
+			.uri("/posts/1")
 			.retrieve()
 			.toEntity(String.class);
 
@@ -66,5 +71,16 @@ class BlogApplicationTests {
 		String updatedAt = documentContext.read("$.updatedAt");
 		assertThat(updatedAt).isNotNull(); 
 		assertThat(updatedAt).isEqualTo("2021-09-01T12:00:00Z");
+	}
+	
+	@Test 
+	void shouldNotReturnAPostWithAnUnknownId() {
+		ResponseEntity<String> response = restClient.get()
+			.uri("/posts/9999")
+			.retrieve()
+			.toEntity(String.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+		assertThat(response.getBody()).isBlank();
 	}
 }
