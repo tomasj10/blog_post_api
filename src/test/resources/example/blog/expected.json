@@ -1,0 +1,12 @@
+{
+    "id": 1,
+    "title":"Test Post", 
+    "content":"This is the Test Post Content",
+    "category":"This is the Post Category",
+    "tags": [
+        "This is the 1st Post Tag",
+        "This is the 2nd Post Tag"
+    ],
+    "createdAt": "2021-09-01T12:00:00Z",
+    "updatedAt": "2021-09-01T12:00:00Z"
+}
