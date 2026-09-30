@@ -1,7 +1,6 @@
 package example.blog;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ public class PostJsonTest {
             "Test Post", 
             "This is the Test Post Content", 
             "This is the Post Category",
-            List.of("This is the 1st Post Tag", "This is the 2nd Post Tag"),
             "2021-09-01T12:00:00Z",
             "2021-09-01T12:00:00Z"
         ); 
@@ -49,12 +47,6 @@ public class PostJsonTest {
             "This is the Post Category"
         );
         
-        assertThat(json.write(post)).hasJsonPathArrayValue("@.tags");
-        assertThat(json.write(post)).extractingJsonPathArrayValue("@.tags").containsExactly(
-            "This is the 1st Post Tag", 
-            "This is the 2nd Post Tag"
-        );
-        
         assertThat(json.write(post)).hasJsonPathStringValue("@.createdAt");
         assertThat(json.write(post)).extractingJsonPathStringValue("@.createdAt").isEqualTo(
             "2021-09-01T12:00:00Z"
@@ -74,10 +66,6 @@ public class PostJsonTest {
                 "title":"Test Post", 
                 "content":"This is the Test Post Content",
                 "category":"This is the Post Category",
-                "tags": [
-                    "This is the 1st Post Tag",
-                    "This is the 2nd Post Tag"
-                ],
                 "createdAt": "2021-09-01T12:00:00Z",
                 "updatedAt": "2021-09-01T12:00:00Z"
             }
@@ -88,10 +76,6 @@ public class PostJsonTest {
             "Test Post", 
             "This is the Test Post Content", 
             "This is the Post Category",
-            List.of(
-                "This is the 1st Post Tag",
-                "This is the 2nd Post Tag"
-            ),
             "2021-09-01T12:00:00Z",
             "2021-09-01T12:00:00Z"
         );

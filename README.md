@@ -7,6 +7,7 @@ Java 24, Maven 3.10.0-rc-1, Spring Boot 4.1.1. Following the [Building a REST AP
 
 ## Project Documentation
 ### API Contract
+
 #### Create Blog Post
 
 Create a new blog post using the POST method
@@ -149,3 +150,5 @@ GET /posts?term=tech
 ```
 This should return all blog posts that have the term "tech" in their title, content or category. You can use a simple SQL query if you are using a SQL database or a similar query for a NoSQL database.
 
+### Additional Notes
+I deleted the use of tags, this is a test project to just learn throughout the course, and working with lists in the database is a later feature, for now, we will forget tags.   

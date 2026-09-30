@@ -59,10 +59,6 @@ class BlogApplicationTests {
 		String category = documentContext.read("$.category");
 		assertThat(category).isNotNull(); 
 		assertThat(category).isEqualTo("This is the Post Category");
-		
-		List<String> tags = documentContext.read("$.tags");
-		assertThat(tags).isNotEmpty(); 
-		assertThat(tags).containsExactly("This is the 1st Post Tag", "This is the 2nd Post Tag");
 
 		String createdAt = documentContext.read("$.createdAt");
 		assertThat(createdAt).isNotNull(); 

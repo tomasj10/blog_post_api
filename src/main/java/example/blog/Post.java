@@ -1,13 +1,13 @@
 package example.blog;
 
-import java.util.List;
+
+import org.springframework.data.annotation.Id;
 
 public record Post(
-    Long id,
+    @Id Long id,
     String title, 
     String content, 
     String category,
-    List<String> tags,
     String createdAt, 
     String updatedAt
 ) {}

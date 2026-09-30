@@ -1,6 +1,6 @@
 package example.blog;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/posts")
 public class PostController {
 
+    private final PostRepository postRepository;
+
+    private PostController(PostRepository postRepository) {
+        this.postRepository = postRepository; 
+    }
+
     @GetMapping("/{requestedId}") 
     private ResponseEntity<Post> findById(@PathVariable Long requestedId) {
-        if (!requestedId.equals(1L)) return ResponseEntity.notFound().build();
+        Optional<Post> postOptional = postRepository.findById(requestedId);
         
-        Post post = new Post(
-            requestedId, 
-            "Test Post", 
-            "This is the Test Post Content", 
-            "This is the Post Category",
-            List.of("This is the 1st Post Tag", "This is the 2nd Post Tag"),
-            "2021-09-01T12:00:00Z",
-            "2021-09-01T12:00:00Z"
-        ); 
+        if (postOptional.isPresent()) {
+            return ResponseEntity.ok(postOptional.get());
+        }
 
-        return ResponseEntity.ok(post);
+        return ResponseEntity.notFound().build();
     }
 }
