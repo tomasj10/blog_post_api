@@ -273,4 +273,15 @@ class BlogApplicationTests {
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 	}
+
+	@Test
+	void shouldNotAllowAccessToCashCardsTheyDoNotOwn() {
+		ResponseEntity<String> response = restClient
+			.get()
+			.uri("/posts/4")
+			.retrieve()
+			.toEntity(String.class);
+			
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+	}
 }

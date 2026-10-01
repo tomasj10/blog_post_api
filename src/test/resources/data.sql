@@ -27,3 +27,13 @@ VALUES (
     '2023-01-22T17:45:00Z', 
     '2023-01-22T17:45:00Z'
 ); 
+
+INSERT INTO post ( title, content, category, owner, created_at, updated_at) 
+VALUES ( 
+    'Another title', 
+    'Different content', 
+    'UI/UX',
+    'kumar', 
+    '2023-01-22T17:45:00Z', 
+    '2023-01-22T17:45:00Z'
+); 
