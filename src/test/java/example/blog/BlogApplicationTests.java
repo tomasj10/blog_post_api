@@ -189,4 +189,59 @@ class BlogApplicationTests {
 			"2023-01-22T17:45:00Z"
 		);
 	}
+
+	@Test 
+	void shouldReturnAPageOfPosts() {
+		ResponseEntity<String> response = restClient
+			.get()
+			.uri("/posts?page=0&size=1")
+			.retrieve()
+			.toEntity(String.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+		DocumentContext documentContext = JsonPath.parse(response.getBody());
+		JSONArray page = documentContext.read("$[*]");
+		assertThat(page.size()).isEqualTo(1);
+	}
+
+	@Test 
+	void shouldReturnASortedPageOfPosts() {
+		ResponseEntity<String> response = restClient
+			.get()
+			.uri("/posts?page=0&size=1&sort=title,asc")
+			.retrieve()
+			.toEntity(String.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+		DocumentContext documentContext = JsonPath.parse(response.getBody());
+		JSONArray page = documentContext.read("$[*]");
+		assertThat(page.size()).isEqualTo(1);
+
+		String firstTitle = documentContext.read("$[0].title");
+		assertThat(firstTitle).isEqualTo("Getting Started with GraphQL");
+	}
+
+	@Test 
+	void shouldReturnAPageOfPostsWithNoParametersAndUseDefaultValues() {
+		ResponseEntity<String> response = restClient
+			.get()
+			.uri("/posts")
+			.retrieve()
+			.toEntity(String.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+		DocumentContext documentContext = JsonPath.parse(response.getBody());
+		JSONArray page = documentContext.read("$[*]");
+		assertThat(page.size()).isEqualTo(3);
+
+		JSONArray titles = documentContext.read("$..title");
+		assertThat(titles).containsExactly(
+			"Test Post",
+			"Mastering UI Design Systems",
+			"Getting Started with GraphQL"
+		);
+	}
 }

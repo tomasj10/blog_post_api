@@ -3,6 +3,10 @@ package example.blog;
 import java.net.URI;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,8 +38,16 @@ public class PostController {
     }
 
     @GetMapping() 
-    private ResponseEntity<Iterable<Post>> findAll() {
-        return ResponseEntity.ok(postRepository.findAll());
+    private ResponseEntity<Iterable<Post>> findAll(Pageable pageable) {
+        Page<Post> page = postRepository.findAll(
+            PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                pageable.getSortOr(Sort.by(Sort.Direction.DESC, "title"))
+            )
+        );
+
+        return ResponseEntity.ok(page.getContent());
     }
 
     //UCB is inyected from Spring's IoC Container
