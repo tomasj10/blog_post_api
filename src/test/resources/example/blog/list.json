@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "title": "Test Post",
+    "content": "This is the Test Post Content",
+    "category": "This is the Post Category",
+    "createdAt": "2021-09-01T12:00:00Z",
+    "updatedAt": "2021-09-01T12:00:00Z"
+  },
+  {
+    "id": 2,
+    "title": "Getting Started with GraphQL",
+    "content": "A comprehensive guide to building flexible APIs and querying data efficiently.",
+    "category": "Backend Development",
+    "createdAt": "2022-04-10T08:15:00Z",
+    "updatedAt": "2022-04-12T14:30:00Z"
+  },
+  {
+    "id": 3,
+    "title": "Mastering UI Design Systems",
+    "content": "How to create consistent, scalable design tokens and components in modern web apps.",
+    "category": "UI/UX",
+    "createdAt": "2023-01-22T17:45:00Z",
+    "updatedAt": "2023-01-22T17:45:00Z"
+  }
+]

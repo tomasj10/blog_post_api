@@ -1,7 +1,10 @@
 package example.blog;
 
 import java.io.IOException;
+import java.time.Instant;
 
+import org.assertj.core.util.Arrays;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
@@ -13,6 +16,41 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PostJsonTest {
     @Autowired 
     private JacksonTester<Post> json; 
+
+    @Autowired 
+    private JacksonTester<Post[]> jsonList; 
+
+    private Post[] posts;
+
+    @BeforeEach
+    void setUp() {
+        posts = Arrays.array(
+            new Post(
+                1L,
+                "Test Post",
+                "This is the Test Post Content",
+                "This is the Post Category",
+                "2021-09-01T12:00:00Z",
+                "2021-09-01T12:00:00Z"
+            ),
+            new Post(
+                2L,
+                "Getting Started with GraphQL",
+                "A comprehensive guide to building flexible APIs and querying data efficiently.",
+                "Backend Development",
+                "2022-04-10T08:15:00Z",
+                "2022-04-12T14:30:00Z"
+            ),
+            new Post(
+                3L,
+                "Mastering UI Design Systems",
+                "How to create consistent, scalable design tokens and components in modern web apps.",
+                "UI/UX",
+                "2023-01-22T17:45:00Z",
+                "2023-01-22T17:45:00Z"
+            )
+        );
+    }
     
     @Test 
     void postSerializationTest() throws IOException {
@@ -81,5 +119,44 @@ public class PostJsonTest {
         );
 
         assertThat(json.parse(expectedOutput)).isEqualTo(post);
+    }
+
+    @Test 
+    void postListSerializationTest() throws IOException {
+        assertThat(jsonList.write(posts)).isStrictlyEqualToJson("list.json");
+    }
+
+    @Test 
+    void postListDeserializationTest() throws IOException {
+        String expected = """
+            [
+                {
+                    "id": 1,
+                    "title": "Test Post",
+                    "content": "This is the Test Post Content",
+                    "category": "This is the Post Category",
+                    "createdAt": "2021-09-01T12:00:00Z",
+                    "updatedAt": "2021-09-01T12:00:00Z"
+                },
+                {
+                    "id": 2,
+                    "title": "Getting Started with GraphQL",
+                    "content": "A comprehensive guide to building flexible APIs and querying data efficiently.",
+                    "category": "Backend Development",
+                    "createdAt": "2022-04-10T08:15:00Z",
+                    "updatedAt": "2022-04-12T14:30:00Z"
+                },
+                {
+                    "id": 3,
+                    "title": "Mastering UI Design Systems",
+                    "content": "How to create consistent, scalable design tokens and components in modern web apps.",
+                    "category": "UI/UX",
+                    "createdAt": "2023-01-22T17:45:00Z",
+                    "updatedAt": "2023-01-22T17:45:00Z"
+                }
+            ]    
+        """;
+
+        assertThat(jsonList.parse(expected)).isEqualTo(posts);
     }
 }
