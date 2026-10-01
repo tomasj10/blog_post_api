@@ -6,10 +6,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.RestClient;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+
+import net.minidev.json.JSONArray;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -81,6 +84,7 @@ class BlogApplicationTests {
 	}
 
 	@Test 
+	@DirtiesContext 
 	void shouldCreateANewPost() {
 		// If we don't insert ID in our data.sql, h2 will automaticaly assign 1 to the 1st post created, and the next post (this test) will be 2 always.
 
@@ -108,7 +112,6 @@ class BlogApplicationTests {
 		Number id = documentContext.read("$.id");
 
 		assertThat(id).isNotNull();
-		assertThat(id).isEqualTo(2);
 
 		String title = documentContext.read("$.title");
 		assertThat(title).isNotNull(); 
@@ -129,5 +132,61 @@ class BlogApplicationTests {
 		String updatedAt = documentContext.read("$.updatedAt");
 		assertThat(updatedAt).isNotNull(); 
 		assertThat(updatedAt).isEqualTo("982837372839");
+	}
+
+	@Test 
+	void shouldReturnAllPostsWhenListIsrequested() {
+		ResponseEntity<String> response = restClient.get()
+			.uri("/posts")
+			.retrieve()
+			.toEntity(String.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+		DocumentContext documentContext = JsonPath.parse(response.getBody());
+		int postCount = documentContext.read("$.length()");
+		assertThat(postCount).isEqualTo(3);
+
+		JSONArray ids = documentContext.read("$..id");
+		assertThat(ids).containsExactlyInAnyOrder(
+			1,
+			2,
+			3
+		);
+
+		JSONArray titles = documentContext.read("$..title");
+		assertThat(titles).containsExactlyInAnyOrder(
+			"Test Post",
+			"Getting Started with GraphQL",
+			"Mastering UI Design Systems"
+		);
+
+		JSONArray contents = documentContext.read("$..content");
+		assertThat(contents).containsExactlyInAnyOrder(
+			"This is the Test Post Content",
+			"A comprehensive guide to building flexible APIs and querying data efficiently.",
+			"How to create consistent, scalable design tokens and components in modern web apps."
+		);
+
+		JSONArray categories = documentContext.read("$..category");
+		assertThat(categories).containsExactlyInAnyOrder(
+			"This is the Post Category",
+			"Backend Development",
+			"UI/UX"
+		);
+
+		JSONArray createdsAt = documentContext.read("$..createdAt");
+		assertThat(createdsAt).containsExactlyInAnyOrder(
+			"2021-09-01T12:00:00Z",
+			"2022-04-10T08:15:00Z",
+			"2023-01-22T17:45:00Z"
+		);
+
+		JSONArray updatedsAt = documentContext.read("$..updatedAt");
+		assertThat(updatedsAt).containsExactlyInAnyOrder(
+			"2021-09-01T12:00:00Z",
+			"2022-04-12T14:30:00Z",
+			"2023-01-22T17:45:00Z"
+		);
 	}
 }

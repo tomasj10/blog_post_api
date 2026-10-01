@@ -33,6 +33,11 @@ public class PostController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping() 
+    private ResponseEntity<Iterable<Post>> findAll() {
+        return ResponseEntity.ok(postRepository.findAll());
+    }
+
     //UCB is inyected from Spring's IoC Container
     @PostMapping 
     private ResponseEntity<Void> createPost(@RequestBody Post newPost, UriComponentsBuilder ucb) {
