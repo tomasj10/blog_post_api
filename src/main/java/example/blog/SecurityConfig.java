@@ -25,7 +25,7 @@ class SecurityConfig {
         http
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/posts/**")
-                        .authenticated())
+                        .hasRole("POST-OWNER"))
                 .httpBasic(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable());
         return http.build();
@@ -37,8 +37,15 @@ class SecurityConfig {
         UserDetails sarah = users
             .username("sarah1")
             .password(passwordEncoder.encode("abc123"))
-            .roles()
+            .roles("POST-OWNER")
             .build();
-        return new InMemoryUserDetailsManager(sarah);
+
+        UserDetails hankOwnsNoPosts = users
+            .username("hank-owns-no-posts")
+            .password(passwordEncoder.encode("qrs456"))
+            .roles("NON-OWNER") // new role
+            .build();
+
+        return new InMemoryUserDetailsManager(sarah, hankOwnsNoPosts);
     }
 }

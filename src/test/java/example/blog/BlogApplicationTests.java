@@ -262,4 +262,15 @@ class BlogApplicationTests {
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
 	}
+
+	@Test
+	void shouldRejectUsersWhoAreNotCardOwners() {
+		ResponseEntity<String> response = restClient.get()
+			.uri("/posts/2")
+			.headers(headers -> headers.setBasicAuth("hank-owns-no-posts", "qrs456"))
+			.retrieve()
+			.toEntity(String.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+	}
 }
