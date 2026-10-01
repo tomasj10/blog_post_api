@@ -46,6 +46,12 @@ class SecurityConfig {
             .roles("NON-OWNER") // new role
             .build();
 
-        return new InMemoryUserDetailsManager(sarah, hankOwnsNoPosts);
+        UserDetails kumar = users
+                .username("kumar")
+                .password(passwordEncoder.encode("xyz789"))
+                .roles("POST-OWNER")
+                .build();
+
+        return new InMemoryUserDetailsManager(sarah, hankOwnsNoPosts, kumar);
     }
 }

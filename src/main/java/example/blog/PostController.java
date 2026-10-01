@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -97,5 +98,17 @@ public class PostController {
         postRepository.save(updatedPost);
         
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{requestedId}")
+    private ResponseEntity<Void> deletePost(
+        @PathVariable Long requestedId,
+        Principal principal
+    ) {
+        if (!postRepository.existsByIdAndOwner(requestedId, principal.getName())) return ResponseEntity.notFound().build();
+
+        postRepository.deleteById(requestedId);
+
+        return ResponseEntity.noContent().build(); 
     }
 }

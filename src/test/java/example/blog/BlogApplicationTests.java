@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -326,5 +327,57 @@ class BlogApplicationTests {
 			.toBodilessEntity();
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+	}
+
+	@Test
+	@DirtiesContext
+	void shouldDeleteAnExistingPost() {
+		ResponseEntity<Void> response = restClient
+			.delete()
+			.uri("/posts/1")
+			.retrieve()
+			.toBodilessEntity();
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+		ResponseEntity<String> getResponse = restClient
+			.get()
+			.uri("/posts/1")
+			.retrieve()
+			.toEntity(String.class);
+
+    	assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+	}
+
+	@Test
+	void shouldNotDeleteAPostThatDoesNotExist() {
+		ResponseEntity<Void> deleteResponse = restClient
+			.delete()
+			.uri("/posts/99999")
+			.retrieve()
+			.toBodilessEntity();
+
+		assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+	}
+
+	@Test
+	void shouldNotAllowDeletionOfPostsTheyDoNotOwn() {
+		ResponseEntity<Void> deleteResponse = restClient
+				.delete()
+				.uri("/posts/4")
+				.retrieve()
+				.toBodilessEntity();
+		
+		assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+		ResponseEntity<String> getResponse = restClient
+			.get()
+			.uri("/posts/4")
+			.headers(headers -> headers.setBasicAuth("kumar", "xyz789"))
+			.retrieve()
+			.toEntity(String.class);
+
+
+		assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 	}
 }

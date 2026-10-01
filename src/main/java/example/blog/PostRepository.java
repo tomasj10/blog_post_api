@@ -11,4 +11,5 @@ interface PostRepository extends
 {    
     Post findByIdAndOwner(Long id, String owner);
     Page<Post> findByOwner(String owner, PageRequest pageRequest);
+    boolean existsByIdAndOwner(Long id, String owner);
 }
