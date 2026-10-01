@@ -3,7 +3,7 @@
 In [Roadmap Backend Projects: Building a Blogging API](https://roadmap.sh/projects/blogging-platform-api)
 
 ## Project Stack
-Java 24, Maven 3.10.0-rc-1, Spring Boot 4.1.1. Following the [Building a REST API with Spring Boot](https://spring.academy/courses/building-a-rest-api-with-spring-boot) course.
+Java 21, Apache Maven, Spring Boot 4.1.1, JUnit 5. Following the [Building a REST API with Spring Boot](https://spring.academy/courses/building-a-rest-api-with-spring-boot) course.
 
 ## Project Documentation
 ### API Contract
