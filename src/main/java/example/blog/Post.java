@@ -10,5 +10,5 @@ public record Post(
     String category,
     String owner,
     String createdAt, 
-    String updatedAt,
+    String updatedAt
 ) {}

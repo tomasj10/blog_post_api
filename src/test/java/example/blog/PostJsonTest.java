@@ -30,6 +30,7 @@ public class PostJsonTest {
                 "Test Post",
                 "This is the Test Post Content",
                 "This is the Post Category",
+                "sarah1",
                 "2021-09-01T12:00:00Z",
                 "2021-09-01T12:00:00Z"
             ),
@@ -38,6 +39,7 @@ public class PostJsonTest {
                 "Getting Started with GraphQL",
                 "A comprehensive guide to building flexible APIs and querying data efficiently.",
                 "Backend Development",
+                "sarah1",
                 "2022-04-10T08:15:00Z",
                 "2022-04-12T14:30:00Z"
             ),
@@ -46,6 +48,7 @@ public class PostJsonTest {
                 "Mastering UI Design Systems",
                 "How to create consistent, scalable design tokens and components in modern web apps.",
                 "UI/UX",
+                "sarah1",
                 "2023-01-22T17:45:00Z",
                 "2023-01-22T17:45:00Z"
             )
@@ -59,6 +62,7 @@ public class PostJsonTest {
             "Test Post", 
             "This is the Test Post Content", 
             "This is the Post Category",
+            "sarah1",
             "2021-09-01T12:00:00Z",
             "2021-09-01T12:00:00Z"
         ); 
@@ -104,6 +108,7 @@ public class PostJsonTest {
                 "title":"Test Post", 
                 "content":"This is the Test Post Content",
                 "category":"This is the Post Category",
+                "owner": "sarah1",
                 "createdAt": "2021-09-01T12:00:00Z",
                 "updatedAt": "2021-09-01T12:00:00Z"
             }
@@ -114,6 +119,7 @@ public class PostJsonTest {
             "Test Post", 
             "This is the Test Post Content", 
             "This is the Post Category",
+            "sarah1",
             "2021-09-01T12:00:00Z",
             "2021-09-01T12:00:00Z"
         );
@@ -135,6 +141,7 @@ public class PostJsonTest {
                     "title": "Test Post",
                     "content": "This is the Test Post Content",
                     "category": "This is the Post Category",
+                    "owner": "sarah1",
                     "createdAt": "2021-09-01T12:00:00Z",
                     "updatedAt": "2021-09-01T12:00:00Z"
                 },
@@ -143,6 +150,7 @@ public class PostJsonTest {
                     "title": "Getting Started with GraphQL",
                     "content": "A comprehensive guide to building flexible APIs and querying data efficiently.",
                     "category": "Backend Development",
+                    "owner": "sarah1",
                     "createdAt": "2022-04-10T08:15:00Z",
                     "updatedAt": "2022-04-12T14:30:00Z"
                 },
@@ -151,6 +159,7 @@ public class PostJsonTest {
                     "title": "Mastering UI Design Systems",
                     "content": "How to create consistent, scalable design tokens and components in modern web apps.",
                     "category": "UI/UX",
+                    "owner": "sarah1",
                     "createdAt": "2023-01-22T17:45:00Z",
                     "updatedAt": "2023-01-22T17:45:00Z"
                 }

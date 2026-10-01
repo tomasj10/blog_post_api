@@ -29,6 +29,7 @@ class BlogApplicationTests {
 	@BeforeEach 
 	void setUp() {
 		this.restClient = RestClient.builder()
+		.defaultHeaders(headers -> headers.setBasicAuth("sarah1", "abc123"))
 		.baseUrl("http://localhost:" + port)
 		.defaultStatusHandler(status -> status.isError(), (request, response) -> {
 			// Ignore exceptions to assert any HTTP status code in tests.  
@@ -89,7 +90,13 @@ class BlogApplicationTests {
 		// If we don't insert ID in our data.sql, h2 will automaticaly assign 1 to the 1st post created, and the next post (this test) will be 2 always.
 
 		Post newPost = new Post(
-			null, "2nd post", "This is the 2nd Post content", "This is another category", "982837372839", "982837372839"
+			null, 
+			"2nd post", 
+			"This is the 2nd Post content", 
+			"This is another category",
+			"sarah1", 
+			"982837372839", 
+			"982837372839"
 		);
 
 		ResponseEntity<Void> createReponse = restClient.post()
@@ -243,5 +250,16 @@ class BlogApplicationTests {
 			"Mastering UI Design Systems",
 			"Getting Started with GraphQL"
 		);
+	}
+
+	@Test
+	void shouldNotReturnAPostWhenUsingBadCredentials() {
+		ResponseEntity<String> response = restClient.get()
+			.uri("/posts/2")
+			.headers(headers -> headers.setBasicAuth("sarah1", "BAD-PASSWORD"))
+			.retrieve()
+			.toEntity(String.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
 	}
 }
