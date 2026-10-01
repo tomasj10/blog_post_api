@@ -2,7 +2,6 @@ package example.blog;
 
 import java.net.URI;
 import java.security.Principal;
-import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -12,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,16 +27,16 @@ public class PostController {
         this.postRepository = postRepository; 
     }
 
+    private Post findPostByIdAndOwner(Long requestedId, Principal principal) {
+        return postRepository.findByIdAndOwner(requestedId, principal.getName());
+    }
+
     @GetMapping("/{requestedId}") 
     private ResponseEntity<Post> findById(@PathVariable Long requestedId, Principal principal) {
-        Optional<Post> postOptional = Optional.ofNullable(
-            postRepository.findByIdAndOwner(requestedId, principal.getName())
-        );
+        Post post = findPostByIdAndOwner(requestedId, principal);
         
-        if (postOptional.isPresent()) {
-            return ResponseEntity.ok(postOptional.get());
-        }
-
+        if (post != null) return ResponseEntity.ok(post);
+        
         return ResponseEntity.notFound().build();
     }
 
@@ -73,5 +73,29 @@ public class PostController {
             .toUri();
 
         return ResponseEntity.created(locationOfNewPost).build(); 
+    }
+
+    @PutMapping("/{updateId}")
+    private ResponseEntity<Void> putPost(
+        @PathVariable Long updateId, 
+        @RequestBody Post postUpdate,
+        Principal principal
+    ) {
+        Post post = findPostByIdAndOwner(updateId, principal);
+
+        if (post == null) return ResponseEntity.notFound().build();
+
+        Post updatedPost = new Post(post.id(),
+            postUpdate.title() != null && !postUpdate.title().isBlank() ? postUpdate.title() : post.title(),
+            postUpdate.content() != null && !postUpdate.content().isBlank() ? postUpdate.content() : post.content(),
+            postUpdate.category() != null && !postUpdate.category().isBlank() ? postUpdate.category() : post.category(),
+            principal.getName(), 
+            postUpdate.createdAt() != null && !postUpdate.createdAt().isBlank() ? postUpdate.createdAt() : post.createdAt(), 
+            postUpdate.updatedAt() != null && !postUpdate.updatedAt().isBlank() ? postUpdate.updatedAt() : post.updatedAt()
+        );
+
+        postRepository.save(updatedPost);
+        
+        return ResponseEntity.noContent().build();
     }
 }

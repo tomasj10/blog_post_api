@@ -281,7 +281,50 @@ class BlogApplicationTests {
 			.uri("/posts/4")
 			.retrieve()
 			.toEntity(String.class);
-			
+
+		//It is better to return NOT FOUND, so we don't give any clue about other possible users and their posts.  
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND); 	
+	}
+
+	@Test 
+	@DirtiesContext 
+	void shouldUpdateAnExistingPost() {
+		Post postUpdate = new Post(null, "We have just updated the title", null, null, null, null, null);
+		
+		ResponseEntity<Void> response = restClient
+			.put()
+			.uri("/posts/2")
+			.body(postUpdate)
+			.retrieve()
+			.toBodilessEntity();
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+	}
+
+	@Test
+	void shouldNotUpdateAPostThatDoesNotExist() {
+		Post unknownPost = new Post(null, "We have just updated the title", null, null, null, null, null);
+		ResponseEntity<Void> response = restClient
+			.put()
+			.uri("/posts/99999")
+			.body(unknownPost)
+			.retrieve()
+			.toBodilessEntity();
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+	}
+
+	@Test
+	void shouldNotUpdateACashCardThatIsOwnedBySomeoneElse() {
+		Post kumarsPost = new Post(null, "We have just updated the title", null, null, null, null, null);
+		
+		ResponseEntity<Void> response = restClient
+			.put()
+			.uri("/posts/4")
+			.body(kumarsPost)
+			.retrieve()
+			.toBodilessEntity();
+
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 	}
 }
