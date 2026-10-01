@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS post (
     title      VARCHAR(100) NOT NULL,
     content    VARCHAR(255) NOT NULL,
     category   VARCHAR(50),
+    owner      VARCHAR(50) NOT NULL,
     created_at VARCHAR(100) NOT NULL,
     updated_at VARCHAR(100) NOT NULL
 );

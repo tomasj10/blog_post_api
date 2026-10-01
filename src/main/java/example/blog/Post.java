@@ -8,6 +8,7 @@ public record Post(
     String title, 
     String content, 
     String category,
+    String owner,
     String createdAt, 
-    String updatedAt
+    String updatedAt,
 ) {}
